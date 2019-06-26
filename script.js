@@ -24,5 +24,27 @@ function copy() {
     $("#copy").text(str);
     var copyText = document.querySelector("#copy");
     copyText.select();
-    document.execCommand("copy")
+    document.execCommand("copy");
+    iosCopyToClipboard(document.getElementById("copy"));
+}
+
+function iosCopyToClipboard(el) {
+    var oldContentEditable = el.contentEditable,
+        oldReadOnly = el.readOnly,
+        range = document.createRange();
+
+    el.contentEditable = true;
+    el.readOnly = false;
+    range.selectNodeContents(el);
+
+    var s = window.getSelection();
+    s.removeAllRanges();
+    s.addRange(range);
+
+    el.setSelectionRange(0, 999999); // A big number, to cover anything that could be inside the element.
+
+    el.contentEditable = oldContentEditable;
+    el.readOnly = oldReadOnly;
+
+    document.execCommand('copy');
 }
